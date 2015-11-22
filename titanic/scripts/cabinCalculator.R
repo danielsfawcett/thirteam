@@ -45,8 +45,9 @@ minmaxDF
 #prop.table(table(Deck = getDeck, Survived = train$Survived), 1)
 
 #Function that counts the number of cabins per row and divides the fare by that number
+#This gives the price per cabin. there's ambiguity about the number of people in the cabins (children), and wrongly filled in record 
 #Later add code for N/A cabins: if ticket is unique, then check where fare would place it. else divide it and then check  
-knownCabins<-subset(df, df$Cabin!="" & !duplicated(Ticket))
+knownCabins<-subset(df, df$Cabin!="")
 knownCabins[order(knownCabins$Cabin),]
 
 cabins<-character()
@@ -63,5 +64,31 @@ knownCabins
 knownCabins$Fare <- knownCabins$Fare/knownCabins$NumberCabins
 knownCabins[order(knownCabins$Ticket),]
 
+####First count how many times each ticket appears and divide the fare by the number of tickets
+##This gives the price per person for that ticket. 
+duplicateTickets<-df$Ticket[duplicated(df$Ticket)]
+duplicateTickets
 
+numdup<-integer(length(duplicateTickets))
+numDuplicated<-data.frame(Ticket=duplicateTickets, NumOfDup = numdup)
+numDuplicated
+
+for (t in df$Ticket)
+{
+  if (t %in% duplicateTickets)
+  {
+    numDuplicated$NumOfDup[numDuplicated$Ticket==t]<-numDuplicated$NumOfDup+1
+  }
+}
+numDuplicated[order(numDuplicated$Ticket),]
+
+for (dt in df$Ticket)
+{
+  if (dt %in% duplicateTickets)
+  {
+    df$Fare[df$Ticket==dt]<-knownCabins$Fare[knownCabins$Ticket==dt]
+  }
+}
+dt
+df[order(df$Ticket),]
 
