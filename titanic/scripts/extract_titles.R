@@ -38,3 +38,6 @@ test <- combi[892:1309,]
 # make sure the title columns are factors in both sets
 train$Title <- factor(train$Title)
 test$Title <- factor(test$Title)
+
+# remove the combined data frame
+rm(combi)
