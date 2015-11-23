@@ -58,9 +58,11 @@ for (c in knownCabins$Cabin)
   nCabins<-c(nCabins, length(cabins))
 }
 
+
 knownCabins[, "NumberCabins"]<-nCabins
 knownCabins
-
+knownCabins[knownCabins$NumberCabins>1 & !duplicated(knownCabins$Ticket),] #Records where a set of cabins is registered for only one person(ticket appears once)
+knownCabins[knownCabins$NumberCabins>1 & duplicated(knownCabins$Ticket),] #Records where a set of cabins is registered for multiple people(ticket appears>1)
 knownCabins$Fare <- knownCabins$Fare/knownCabins$NumberCabins
 knownCabins[order(knownCabins$Ticket),]
 
