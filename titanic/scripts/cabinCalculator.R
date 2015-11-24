@@ -1,7 +1,8 @@
 train <- read.csv("train.csv", stringsAsFactors=FALSE) #load the training data
 test <- read.csv("test.csv", stringsAsFactors=FALSE) #load the test data
+combined <- rbind(train, test)
 
-getDeck<-substr(train$Cabin, 0, 1)
+getDeck<-substr(combined$Cabin, 0, 1)
 
 #Code for function taken from: https://github.com/wehrley/wehrley.github.io/blob/master/SOUPTONUTS.md
 imputeMedian <- function(impute.var, filter.var, var.levels) {
@@ -13,7 +14,7 @@ imputeMedian <- function(impute.var, filter.var, var.levels) {
 }
 #--------------------
 
-df<-data.frame(Survived = train$Survived, Fare = train$Fare, Ticket = train$Ticket, Deck = getDeck, Cabin = train$Cabin, PClass = train$Pclass)
+df<-data.frame(Fare = combined$Fare, Ticket = combined$Ticket, Deck = getDeck, Cabin = combined$Cabin, PClass = combined$Pclass)
 
 # Code for computing the missing fares taken from: https://github.com/wehrley/wehrley.github.io/blob/master/SOUPTONUTS.md
 df$Fare[df$Fare == 0] <- NA
@@ -48,6 +49,7 @@ minmaxDF
 #This gives the price per cabin. there's ambiguity about the number of people in the cabins (children), and wrongly filled in record 
 #Later add code for N/A cabins: if ticket is unique, then check where fare would place it. else divide it and then check  
 knownCabins<-subset(df, df$Cabin!="")
+knownCabins<-subset(knownCabins, !duplicated(knownCabins$Ticket))
 knownCabins[order(knownCabins$Cabin),]
 
 cabins<-character()
@@ -61,9 +63,11 @@ for (c in knownCabins$Cabin)
 
 knownCabins[, "NumberCabins"]<-nCabins
 knownCabins
+
 knownCabins[knownCabins$NumberCabins>1 & !duplicated(knownCabins$Ticket),] #Records where a set of cabins is registered for only one person(ticket appears once)
-knownCabins[knownCabins$NumberCabins>1 & duplicated(knownCabins$Ticket),] #Records where a set of cabins is registered for multiple people(ticket appears>1)
-knownCabins$Fare <- knownCabins$Fare/knownCabins$NumberCabins
+knownCabins[knownCabins$NumberCabins>1 & duplicated(knownCabins$Ticket)] #Records where a set of cabins is registered for multiple people(ticket appears>1)
+
+knownCabins$Fare[is.na(knownCabins$Fare)] <- knownCabins$Fare/knownCabins$NumberCabins
 knownCabins[order(knownCabins$Ticket),]
 
 ####First count how many times each ticket appears and divide the fare by the number of tickets
@@ -83,14 +87,21 @@ for (t in df$Ticket)
   }
 }
 numDuplicated[order(numDuplicated$Ticket),]
+#-----------------------------
 
 for (dt in df$Ticket)
 {
-  if (dt %in% duplicateTickets)
+  if (dt %in% numDuplicated)
   {
-    df$Fare[df$Ticket==dt]<-knownCabins$Fare[knownCabins$Ticket==dt]
+    df$Fare[df$Ticket==dt]<-df$Fare/numDuplicated$NumOfDup[df$Ticket==dt]
   }
+  else if(!(dt %in% numDuplicated) & dt %in% knownCabins$Ticket)
+  {
+    f<-knownCabins[knownCabins$Ticket==dt,]
+    df$Fare[df$Ticket==dt]<-f$Fare/numDuplicated$NumOfDup[df$Ticket==dt]
+  }
+  
 }
-dt
+
 df[order(df$Ticket),]
 
