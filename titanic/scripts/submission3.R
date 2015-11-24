@@ -1,4 +1,4 @@
-##Submission2 - Tree using Title, Class and Sex
+##Submission3 - Tree using Class, Sex, Age, SibSp, Parch and Fare
 
 # load the data
 train <- read.csv("train.csv", stringsAsFactors=FALSE)
