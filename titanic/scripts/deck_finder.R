@@ -1,6 +1,3 @@
-train <- read.csv("train.csv", stringsAsFactors=FALSE) #load the training data
-test <- read.csv("test.csv", stringsAsFactors=FALSE) #load the test data
-test$Survived <- NA
 combined<-rbind(train,test)
 
 #Code for function taken from: https://github.com/wehrley/wehrley.github.io/blob/master/SOUPTONUTS.md
