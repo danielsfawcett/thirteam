@@ -22,6 +22,61 @@ df$Fare <- imputeMedian(df$Fare, df$PClass,
                         as.numeric(levels(df$PClass)))
 #------------------
 
+# Code to count the number of cabins per ticket
+cabins<-character()
+nCabins<-integer()
+df[, "NumberCabins"]<-nCabins
+for (c in df$Cabin)
+{
+  if (c!="")
+  {
+    cabins<-strsplit(c, " ")[[1]]
+    df$NumberCabins[df$Cabin==c]<-length(cabins)
+  }
+  else
+  {
+    df$NumberCabins[df$Cabin==c]<-1
+  }
+}
+#------------------
+
+# Code to count the number of duplicate tickets
+duplicateTickets<-df$Ticket[duplicated(df$Ticket)]
+
+numdup<-integer()
+
+df[, "NumberTickets"]<-numdup
+df$NumberTickets<-0
+
+for (t in df$Ticket)
+{
+  if (t %in% duplicateTickets)
+  {
+    df$NumberTickets[df$Ticket==t]<-df$NumberTickets[df$Ticket==t]+1
+  }
+  else
+  {
+    df$NumberTickets[df$Ticket==t]<-1
+  }
+}
+df[order(df$Ticket),]
+#-----------------------------
+
+for (i in 1:nrow(df))
+{
+  if (df$NumberTickets[i]>df$NumberCabins[i])
+  {
+    df$Fare[i]<-df$Fare[i]/df$NumberTickets[i]
+  }
+  else if(df$NumberTickets[i]<df$NumberCabins[i])
+  {
+    df$Fare[i]<-df$Fare[i]/df$NumberCabins[i]
+  }
+}
+
+df[order(df$Ticket),]
+#--------------------
+
 #following code displays records where the deck is known and takes the median of the fares for each deck
 knownDecks<-subset(df, df$Deck!="")
 deckFares<-numeric()

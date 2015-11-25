@@ -60,8 +60,20 @@ for (c in knownCabins$Cabin)
   nCabins<-c(nCabins, length(cabins))
 }
 
+df[, "NumberCabins"]<-nCabins
+for (c in df$Cabin)
+{
+  if (c!="")
+  {
+    cabins<-strsplit(c, " ")[[1]]
+    c<-length(cabins)
+  }
+  else
+  {
+    c<-1
+  }
+}
 
-knownCabins[, "NumberCabins"]<-nCabins
 knownCabins
 
 knownCabins[knownCabins$NumberCabins>1 & !duplicated(knownCabins$Ticket),] #Records where a set of cabins is registered for only one person(ticket appears once)
@@ -75,30 +87,36 @@ knownCabins[order(knownCabins$Ticket),]
 duplicateTickets<-df$Ticket[duplicated(df$Ticket)]
 duplicateTickets
 
-numdup<-integer(length(duplicateTickets))
-numDuplicated<-data.frame(Ticket=duplicateTickets, NumOfDup = numdup)
-numDuplicated
+#numdup<-integer(length(duplicateTickets))
+#numDuplicated<-data.frame(Ticket=duplicateTickets, NumOfDup = numdup)
+#numDuplicated
+
+numdup<-integer()
+df[, "NumberTickets"]<-numdup
 
 for (t in df$Ticket)
 {
   if (t %in% duplicateTickets)
   {
-    numDuplicated$NumOfDup[numDuplicated$Ticket==t]<-numDuplicated$NumOfDup+1
+    df$NumberTickets[df$Ticket==t]<-df$NumberTickets+1
+  }
+  else
+  {
+    df$NumberTickets[df$Ticket==t]<-1
   }
 }
-numDuplicated[order(numDuplicated$Ticket),]
+df[order(df$Ticket),]
 #-----------------------------
 
 for (dt in df$Ticket)
 {
-  if (dt %in% numDuplicated)
+  if (dt %in% duplicateTickets)
   {
-    df$Fare[df$Ticket==dt]<-df$Fare/numDuplicated$NumOfDup[df$Ticket==dt]
+    df$Fare<-df$Fare/df$NumberTickets
   }
-  else if(!(dt %in% numDuplicated) & dt %in% knownCabins$Ticket)
+  else if(!(dt %in% duplicateTickets) & dt %in% knownCabins$Ticket)
   {
-    f<-knownCabins[knownCabins$Ticket==dt,]
-    df$Fare[df$Ticket==dt]<-f$Fare/numDuplicated$NumOfDup[df$Ticket==dt]
+    df$Fare<-df$Fare/df$NumberCabins
   }
   
 }
