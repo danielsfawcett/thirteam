@@ -1,3 +1,4 @@
+test$Survived<-NA
 combined<-rbind(train,test)
 
 #Code for function taken from: https://github.com/wehrley/wehrley.github.io/blob/master/SOUPTONUTS.md
