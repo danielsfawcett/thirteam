@@ -23,3 +23,9 @@ if(!require('RColorBrewer')){
   install.packages('RColorBrewer')
   library('RColorBrewer')
 }
+
+## randomForest
+if(!require('randomForest')){
+  install.packages('randomForest')
+  library('randomForest')
+}
