@@ -1,9 +1,5 @@
 ## Add the family size, title and familyName columns to train and test
 
-## load the data
-train <- read.csv("~/github/thirteam/titanic/train.csv", stringsAsFactors=FALSE)
-test <- read.csv("~/github/thirteam/titanic/test.csv", stringsAsFactors=FALSE)
-
 # add the survived column to the test data
 test$Survived <- NA
 
@@ -61,4 +57,4 @@ train$FamilyCat <- factor(train$FamilyCat)
 test$FamilyCat <- factor(test$FamilyCat)
 
 ## remove the combi data frame
-##rm(combi)
+rm(combi)
