@@ -6,6 +6,9 @@ comb<-data.frame(Dates=c(train$Dates, test$Dates), Address=c(train$Address, test
 #Separate the Date column into 'Time' and 'Date' of the crime
 comb$Time<-sapply(as.character(comb$Dates), FUN=function(x){strsplit(x, split=' ')[[1]][2]})
 comb$Dates<-sapply(as.character(comb$Dates), FUN=function(x){strsplit(x, split=' ')[[1]][1]})
+comb$Day<-sapply(as.character(comb$Dates), FUN=function(x){strsplit(x, split='-')[[1]][3]})
+comb$Month<-sapply(as.character(comb$Dates), FUN=function(x){strsplit(x, split='-')[[1]][2]})
+comb$Year<-sapply(as.character(comb$Dates), FUN=function(x){strsplit(x, split='-')[[1]][1]})
 #------------------------
 
 
