@@ -10,14 +10,15 @@
 #install.packages("readr", repos = "http://cran.r-project.org")
 
 # https://www.kaggle.com/ifness/sf-crime/prevalent-crimes-in-san-francisco/code   Use code from this link
-
+# Changed the train data frame to trainSF so theres a difference to the titanic data set
 library(plyr)
 library(dplyr)
 library(ggplot2)
 library(readr)
 
 ## Load data
-trainSF <- read_csv("train.csv")
+trainSF <- read_csv("trainSF.csv")
+
 
 ## Filter categories
 trainSF <- filter(trainSF, Category != "OTHER OFFENSES",
