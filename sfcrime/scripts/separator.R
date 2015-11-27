@@ -28,6 +28,10 @@ comb$ExactPlace[comb$BlockOrCorner=='corner']<-sapply(as.character(comb$Address[
   return (paste (addr[length(addr)-4], addr[length(addr)-1], sep = ', ' , collapse = NULL))})
 #------------------------
 
+#Split train and test back:
+train<-comb[1:878049]
+test<-comb[878050:1762311]
+
 
 
 
