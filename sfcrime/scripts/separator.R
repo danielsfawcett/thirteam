@@ -32,8 +32,8 @@ comb$ExactPlace[comb$BlockOrCorner=='corner']<-sapply(as.character(comb$Address[
 #------------------------
 
 #Split train and test back:
-train<-comb[1:878049]
-test<-comb[878050:1762311]
+train<-cbind(train[,2:9], comb[1:878049,5:10])
+test<-cbind(test, comb[878050:1762311,5:10])
 
 
 
