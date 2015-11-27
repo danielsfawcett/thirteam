@@ -1,7 +1,7 @@
-train<-read.csv("~/Documents/Crime/train.csv")
-test<-read.csv("~/Documents/Crime/test.csv")
+train <- read.csv("train.csv", stringsAsFactors=FALSE)
+test <- read.csv("test.csv", stringsAsFactors=FALSE)
 
-comb<-data.frame(Dates=c(as.character(train$Dates), as.character(test$Dates)), Address=c(as.character(train$Address), as.character(test$Address)), DayOfWeek=c(as.character(train$DayOfWeek), as.character(test$DayOfWeek)), PDDistrict=c(as.character(train$PdDistrict), as.character(test$PdDistrict)))
+comb<-data.frame(Dates=c(train$Dates, test$Dates), Address=c(train$Address, test$Address), DayOfWeek=c(train$DayOfWeek, test$DayOfWeek), PDDistrict=c(train$PdDistrict, test$PdDistrict))
 
 
 comb$Time<-sapply(comb$Dates, FUN=function(x){strsplit(x, split=" ")[[1]][2]})
