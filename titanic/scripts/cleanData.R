@@ -56,4 +56,4 @@ combi$Survived <- factor(combi$Survived)
 # split the data back into train and test
 train <- combi[1:891,]
 test <- combi[892:1309,]
-
+rm(combi)
